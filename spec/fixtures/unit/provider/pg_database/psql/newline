@@ -1,0 +1,5 @@
+postgres|postgres|UTF8|de_DE.utf8|de_DE.utf8|
+template0|postgres|UTF8|en_US.utf8|C|=c/postgres
+postgres=CTc/postgres
+template1|postgres|UTF8|de_DE.utf8|de_DE.utf8|=c/postgres
+postgres=CTc/postgres
