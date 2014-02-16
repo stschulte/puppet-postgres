@@ -36,4 +36,8 @@ Puppet::Type.newtype(:pg_database) do
   newproperty(:ctype) do
     desc "Specifies the LC_CTYPE setting to be used in this database."
   end
+
+  autorequire(:pg_role) do
+    self[:owner]
+  end
 end

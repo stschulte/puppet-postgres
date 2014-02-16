@@ -58,3 +58,24 @@ and `ctype` property of existing databases, but it will only raise
 an error when these values are different from the desired values. So they
 are only taken into account when creating a new database - puppet will not
 change the encodig of a database once it is created.
+
+HINT: If you manage the owner with a `pg_role` resource, puppet will
+automatically add a dependency between the role and the database so
+the role will be created first.
+
+### pg\_role
+
+The `pg_role` type can be used to describe a PostgreSQL role as a puppet
+resource. This way you can easily ensure that a certain user exists or
+that a certain user has a specific password. Let's go back to the `puppetdb`
+example and make sure that a proper user account exists:
+
+    pg_role { 'puppetdb':
+      ensure     => present,
+      password   => 'md559faa421729e846dd800dce59943bfc0',
+      superuser  => false,
+      createdb   => false,
+      createrole => false,
+      inherit    => true,
+      login      => true
+    }

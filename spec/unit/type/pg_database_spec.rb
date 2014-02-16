@@ -82,4 +82,35 @@ describe Puppet::Type.type(:pg_database) do
     end
   end
 
+  describe "autorequire" do
+
+    let :pg_role do
+      Puppet::Type.type(:pg_role).new(:name => 'puppetdbuser', :ensure => :present)
+    end
+
+    let :pg_database do
+      described_class.new(:name => 'puppetdb', :owner => 'puppetdbuser')
+    end
+
+    let :catalog do
+      Puppet::Resource::Catalog.new
+    end
+
+    describe "pg_role" do
+      it "should not autorequire a pg_role if none found" do
+        catalog.add_resource pg_database
+        pg_database.autorequire.should be_empty
+      end
+
+      it "should autorequire a matching pg_role" do
+        catalog.add_resource pg_database
+        catalog.add_resource pg_role
+
+        reqs = pg_database.autorequire
+        reqs.size.should == 1
+        reqs[0].source.must == pg_role
+        reqs[0].target.must == pg_database
+      end
+    end
+  end
 end
