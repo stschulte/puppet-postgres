@@ -25,7 +25,7 @@ Puppet::Type.type(:pg_role).provide(:psql) do
         :createrole  => (fields[3] == 't'),
         :createdb    => (fields[4] == 't'),
         :login       => (fields[5] == 't'),
-        :password    => (fields[6] || :absent),
+        :password    => (fields[6] || :absent)
       )
     end
     instances
