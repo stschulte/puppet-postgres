@@ -23,7 +23,7 @@ describe Puppet::Type.type(:pg_database).provider(:psql) do
 
   describe "instance" do
     it "should return instances from simple list output" do
-      described_class.expects(:execute).with(%w{/foo/psql --no-password --no-align --tuples-only --list}, :uid => 'postgres').returns File.read(my_fixture('simple'))
+      described_class.expects(:execute).with(%w{/foo/psql --no-password --no-align --tuples-only --list}, :failonfail => true, :combine => true, :uid => 'postgres').returns File.read(my_fixture('simple'))
       instances = described_class.instances
       instances.size.should == 1
       instances[0].name.should == 'postgres'
@@ -34,7 +34,7 @@ describe Puppet::Type.type(:pg_database).provider(:psql) do
     end
 
     it "should return instances from list output with newlines" do
-      described_class.expects(:execute).with(%w{/foo/psql --no-password --no-align --tuples-only --list}, :uid => 'postgres').returns File.read(my_fixture('newline'))
+      described_class.expects(:execute).with(%w{/foo/psql --no-password --no-align --tuples-only --list}, :failonfail => true, :combine => true, :uid => 'postgres').returns File.read(my_fixture('newline'))
       instances = described_class.instances
       instances.size.should == 3
       instances[0].name.should == 'postgres'
@@ -73,31 +73,31 @@ describe Puppet::Type.type(:pg_database).provider(:psql) do
     describe "create" do
       it "should use createdb to create a database" do
         Puppet::Type.type(:pg_database).new(:name => 'puppetdb', :provider => provider)
-        provider.expects(:execute).with(%w{/foo/createdb --no-password puppetdb}, :uid => 'postgres')
+        provider.expects(:execute).with(%w{/foo/createdb --no-password puppetdb}, :failonfail => true, :combine => true, :uid => 'postgres')
         provider.create
       end
 
       it "should pass owner if specified" do
         Puppet::Type.type(:pg_database).new(:name => 'puppetdb', :owner => 'puppetdbuser', :provider => provider)
-        provider.expects(:execute).with(%w{/foo/createdb --no-password --owner=puppetdbuser puppetdb}, :uid => 'postgres')
+        provider.expects(:execute).with(%w{/foo/createdb --no-password --owner=puppetdbuser puppetdb}, :failonfail => true, :combine => true, :uid => 'postgres')
         provider.create
       end
 
       it "should pass encoding if specified" do
         Puppet::Type.type(:pg_database).new(:name => 'puppetdb', :encoding => 'UTF8', :provider => provider)
-        provider.expects(:execute).with(%w{/foo/createdb --no-password --encoding=UTF8 puppetdb}, :uid => 'postgres')
+        provider.expects(:execute).with(%w{/foo/createdb --no-password --encoding=UTF8 puppetdb}, :failonfail => true, :combine => true, :uid => 'postgres')
         provider.create
       end
 
       it "should pass collate if specified" do
         Puppet::Type.type(:pg_database).new(:name => 'puppetdb', :collate => 'C', :provider => provider)
-        provider.expects(:execute).with(%w{/foo/createdb --no-password --lc-collate=C puppetdb}, :uid => 'postgres')
+        provider.expects(:execute).with(%w{/foo/createdb --no-password --lc-collate=C puppetdb}, :failonfail => true, :combine => true, :uid => 'postgres')
         provider.create
       end
 
       it "should pass ctype if specified" do
         Puppet::Type.type(:pg_database).new(:name => 'puppetdb', :ctype => 'en_US.UTF-8', :provider => provider)
-        provider.expects(:execute).with(%w{/foo/createdb --no-password --lc-ctype=en_US.UTF-8 puppetdb}, :uid => 'postgres')
+        provider.expects(:execute).with(%w{/foo/createdb --no-password --lc-ctype=en_US.UTF-8 puppetdb}, :failonfail => true, :combine => true, :uid => 'postgres')
         provider.create
       end
 
@@ -110,7 +110,7 @@ describe Puppet::Type.type(:pg_database).provider(:psql) do
           :ctype    => 'en_US.UTF-8',
           :provider => provider
         )
-        provider.expects(:execute).with(%w{/foo/createdb --no-password --encoding=UTF8 --lc-collate=C --lc-ctype=en_US.UTF-8 --owner=puppetdbuser puppetdb}, :uid => 'postgres')
+        provider.expects(:execute).with(%w{/foo/createdb --no-password --encoding=UTF8 --lc-collate=C --lc-ctype=en_US.UTF-8 --owner=puppetdbuser puppetdb}, :failonfail => true, :combine => true, :uid => 'postgres')
         provider.create
       end
     end
@@ -118,7 +118,7 @@ describe Puppet::Type.type(:pg_database).provider(:psql) do
     describe "destroy" do
       it "should execute dropdb to drop the database" do
         Puppet::Type.type(:pg_database).new(:name => 'puppetdb', :provider => provider)
-        provider.expects(:execute).with(%w{/foo/dropdb --no-password puppetdb}, :uid => 'postgres')
+        provider.expects(:execute).with(%w{/foo/dropdb --no-password puppetdb}, :failonfail => true, :combine => true, :uid => 'postgres')
         provider.destroy
       end
     end

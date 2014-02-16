@@ -8,7 +8,7 @@ Puppet::Type.type(:pg_database).provide(:psql) do
     instances = []
     cmdline = [ command(:psql) ]
     cmdline << '--no-password' << '--no-align' << '--tuples-only' << '--list'
-    execute(cmdline, :uid => 'postgres').each_line do |line|
+    execute(cmdline, :failonfail => true, :combine => true, :uid => 'postgres').each_line do |line|
       if match = /^(.*?)\|(.*?)\|(.*?)\|(.*?)\|(.*?)\|/.match(line.chomp)
         instances << new(
           :name     => match.captures[0],
@@ -39,13 +39,13 @@ Puppet::Type.type(:pg_database).provide(:psql) do
     cmdline << "--lc-ctype=#{resource[:ctype]}" if resource[:ctype]
     cmdline << "--owner=#{resource[:owner]}" if resource[:owner]
     cmdline << resource[:name]
-    execute(cmdline, :uid => 'postgres')
+    execute(cmdline, :failonfail => true, :combine => true, :uid => 'postgres')
   end
 
   def destroy
     cmdline = [ command(:dropdb) ]
     cmdline << '--no-password' << resource[:name]
-    execute(cmdline, :uid => 'postgres')
+    execute(cmdline, :failonfail => true, :combine => true, :uid => 'postgres')
   end
 
   def exists?
