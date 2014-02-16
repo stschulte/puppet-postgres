@@ -20,11 +20,11 @@ Puppet::Type.type(:pg_role).provide(:psql) do
       instances << new(
         :name        => fields[0],
         :ensure      => :present,
-        :superuser   => (fields[1] == 't'),
-        :inherit     => (fields[2] == 't'),
-        :createrole  => (fields[3] == 't'),
-        :createdb    => (fields[4] == 't'),
-        :login       => (fields[5] == 't'),
+        :superuser   => (fields[1] == 't') ? :true : :false,
+        :inherit     => (fields[2] == 't') ? :true : :false,
+        :createrole  => (fields[3] == 't') ? :true : :false,
+        :createdb    => (fields[4] == 't') ? :true : :false,
+        :login       => (fields[5] == 't') ? :true : :false,
         :password    => (fields[6] || :absent)
       )
     end
@@ -44,10 +44,13 @@ Puppet::Type.type(:pg_role).provide(:psql) do
   end
 
   def bool_to_sql(property, true_value, false_value)
-    if property.nil?
-      ""
+    case property
+    when :true
+      true_value
+    when :false
+      false_value
     else
-      property ? true_value : false_value
+      ""
     end
   end
 
@@ -84,31 +87,31 @@ Puppet::Type.type(:pg_role).provide(:psql) do
   end
 
   def superuser=(new_value)
-    token = new_value ? 'SUPERUSER' : 'NOSUPERUSER'
+    token = new_value == :true ? 'SUPERUSER' : 'NOSUPERUSER'
     sql= "ALTER ROLE \"#{name}\" #{token};"
     runsql(sql)
   end
 
   def createdb=(new_value)
-    token = new_value ? 'CREATEDB' : 'NOCREATEDB'
+    token = new_value == :true ? 'CREATEDB' : 'NOCREATEDB'
     sql= "ALTER ROLE \"#{name}\" #{token};"
     runsql(sql)
   end
 
   def createrole=(new_value)
-    token = new_value ? 'CREATEROLE' : 'NOCREATEROLE'
+    token = new_value == :true ? 'CREATEROLE' : 'NOCREATEROLE'
     sql= "ALTER ROLE \"#{name}\" #{token};"
     runsql(sql)
   end
 
   def inherit=(new_value)
-    token = new_value ? 'INHERIT' : 'NOINHERIT'
+    token = new_value == :true ? 'INHERIT' : 'NOINHERIT'
     sql= "ALTER ROLE \"#{name}\" #{token};"
     runsql(sql)
   end
 
   def login=(new_value)
-    token = new_value ? 'LOGIN' : 'NOLOGIN'
+    token = new_value == :true ? 'LOGIN' : 'NOLOGIN'
     sql= "ALTER ROLE \"#{name}\" #{token};"
     runsql(sql)
   end

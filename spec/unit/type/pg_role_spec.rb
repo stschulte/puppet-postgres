@@ -48,31 +48,31 @@ describe Puppet::Type.type(:pg_role) do
     [:superuser, :createdb, :createrole, :inherit, :login].each do |bool_property|
       describe bool_property do
         it "should allow true" do
-          described_class.new(:name => 'puppetdbuser', bool_property => true)[bool_property].should == true
+          described_class.new(:name => 'puppetdbuser', bool_property => true)[bool_property].should == :true
         end
 
-        it "should alias \"true\" to true" do
-          described_class.new(:name => 'puppetdbuser', bool_property => 'true')[bool_property].should == true
+        it "should alias \"true\" to :true" do
+          described_class.new(:name => 'puppetdbuser', bool_property => 'true')[bool_property].should == :true
         end
 
-        it "should alias \"yes\" to true" do
-          described_class.new(:name => 'puppetdbuser', bool_property => 'yes')[bool_property].should == true
+        it "should alias \"yes\" to :true" do
+          described_class.new(:name => 'puppetdbuser', bool_property => 'yes')[bool_property].should == :true
         end
 
         it "should allow false" do
-          described_class.new(:name => 'puppetdbuser', bool_property => false)[bool_property].should == false
+          described_class.new(:name => 'puppetdbuser', bool_property => false)[bool_property].should == :false
         end
 
-        it "should alias \"false\" to false" do
-          described_class.new(:name => 'puppetdbuser', bool_property => 'false')[bool_property].should == false
+        it "should alias \"false\" to :false" do
+          described_class.new(:name => 'puppetdbuser', bool_property => 'false')[bool_property].should == :false
         end
 
-        it "should alias \"no\" to false" do
-          described_class.new(:name => 'puppetdbuser', bool_property => 'no')[bool_property].should == false
+        it "should alias \"no\" to :false" do
+          described_class.new(:name => 'puppetdbuser', bool_property => 'no')[bool_property].should == :false
         end
 
         it "should not allow anything else" do
-          expect { described_class.new(:name => 'puppetdbuser', bool_property => 'yess') }.to raise_error Puppet::Error, /expected a boolean value/
+          expect { described_class.new(:name => 'puppetdbuser', bool_property => 'yess') }.to raise_error Puppet::Error, /Invalid value/
         end
       end
     end

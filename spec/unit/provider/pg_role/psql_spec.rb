@@ -18,11 +18,11 @@ describe Puppet::Type.type(:pg_role).provider(:psql) do
       :name       => 'puppetdbuser',
       :ensure     => :present,
       :password   => 'md559faa421729e846dd800dce59943bfc0',
-      :superuser  => false,
-      :createdb   => false,
-      :createrole => false,
-      :inherit    => true,
-      :login      => true
+      :superuser  => :false,
+      :createdb   => :false,
+      :createrole => :false,
+      :inherit    => :true,
+      :login      => :true
     )
   end
 
@@ -38,20 +38,20 @@ describe Puppet::Type.type(:pg_role).provider(:psql) do
       instances[0].should be_exists
       instances[0].name.should == 'postgres'
       instances[0].password.should == :absent
-      instances[0].superuser.should == true
-      instances[0].createdb.should == true
-      instances[0].createrole.should == true
-      instances[0].inherit.should == true
-      instances[0].login.should == true
+      instances[0].superuser.should == :true
+      instances[0].createdb.should == :true
+      instances[0].createrole.should == :true
+      instances[0].inherit.should == :true
+      instances[0].login.should == :true
 
       instances[1].should be_exists
       instances[1].name.should == 'foobar'
       instances[1].password.should == 'md559faa421729e846dd800dce59943bfc0'
-      instances[1].superuser.should == false
-      instances[1].createdb.should == false
-      instances[1].createrole.should == false
-      instances[1].inherit.should == true
-      instances[1].login.should == true
+      instances[1].superuser.should == :false
+      instances[1].createdb.should == :false
+      instances[1].createrole.should == :false
+      instances[1].inherit.should == :true
+      instances[1].login.should == :true
     end
   end
 
@@ -169,11 +169,11 @@ describe Puppet::Type.type(:pg_role).provider(:psql) do
         Puppet::Type.type(:pg_role).new(
           :name       => 'puppetdbuser',
           :password   => 'md559faa421729e846dd800dce59943bfc0',
-          :superuser  => false,
-          :createdb   => false,
-          :createrole => false,
-          :inherit    => true,
-          :login      => true,
+          :superuser  => :false,
+          :createdb   => :false,
+          :createrole => :false,
+          :inherit    => :true,
+          :login      => :true,
           :provider   => provider
         )
         cmdline = basic_psql_cmdline
@@ -226,24 +226,24 @@ describe Puppet::Type.type(:pg_role).provider(:psql) do
   }.each_pair do |bool_property, sql_value|
     describe "when managing #{bool_property}" do
       it "should get the cached value when retrieving the current value" do
-        provider.set(bool_property => true)
-        provider.send(bool_property).should == true
-        provider.set(bool_property => false)
-        provider.send(bool_property).should == false
+        provider.set(bool_property => :true)
+        provider.send(bool_property).should == :true
+        provider.set(bool_property => :false)
+        provider.send(bool_property).should == :false
       end
 
       it "should pass #{sql_value} if the desired value is true" do
         cmdline = basic_psql_cmdline
         cmdline << "ALTER ROLE \"puppetdbuser\" #{sql_value};"
         provider.expects(:execute).with(cmdline, :failonfail => true, :combine => true, :uid => 'postgres')
-        provider.send("#{bool_property}=", true)
+        provider.send("#{bool_property}=", :true)
       end
 
       it "should pass NO#{sql_value} if the desired value is false" do
         cmdline = basic_psql_cmdline
         cmdline << "ALTER ROLE \"puppetdbuser\" NO#{sql_value};"
         provider.expects(:execute).with(cmdline, :failonfail => true, :combine => true, :uid => 'postgres')
-        provider.send("#{bool_property}=", false)
+        provider.send("#{bool_property}=", :false)
       end
     end
   end
