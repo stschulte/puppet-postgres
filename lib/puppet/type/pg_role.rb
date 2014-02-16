@@ -10,6 +10,15 @@ Puppet::Type.newtype(:pg_role) do
 
   newproperty(:password) do
     desc "The hashed password of the database user"
+
+    newvalues :absent, /^md5[0-9a-f]+$/
+
+    validate do |value|
+      unless value == :absent or value == 'absent' or value =~ /^md5[0-9a-f]+$/
+        raise Puppet::Error, "Passing a password in plain text is invalid. The password has to be specified as a hash and must start with 'md5'"
+      end
+    end
+
   end
 
   newproperty(:superuser) do

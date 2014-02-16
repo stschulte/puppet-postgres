@@ -39,9 +39,15 @@ describe Puppet::Type.type(:pg_role) do
 
     describe "password" do
       it "should allow an encrypted password" do
+        described_class.new(:name => 'foo', :password => 'md559faa421729e846dd800dce59943bfc0')[:password].should == 'md559faa421729e846dd800dce59943bfc0'
       end
 
       it "should not allow an unencrypted password" do
+        expect { described_class.new(:name => 'foo', :password => 'plain_text') }.to raise_error Puppet::Error, /plain text is invalid/
+      end
+
+      it "should allow absent to clear a password" do
+        described_class.new(:name => 'foo', :password => 'absent')[:password].should == :absent
       end
     end
 
