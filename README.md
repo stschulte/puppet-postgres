@@ -22,7 +22,19 @@ New facts
 
 New functions
 -------------
-(currently none)
+
+### postgresql\_password
+
+The `postgresql_password` function generates a crypted representation of
+a clear text password. You have to provide two values: The username which
+password you want to generate and the clear text password. The result
+can be used as a `password` parameter to the `pg_role` type because this
+one will expect the password to be already encrypted:
+
+    pg_role { "postgres",
+      ensure => present,
+      password => postgresql_password('postgres', 'secr3t')
+    }
 
 New custom types
 ----------------
@@ -40,7 +52,7 @@ probably want to have the following line in your `pg_hba.conf`
 ### pg\_database
 
 The `pg_database` lets you describe a PostgreSQL database as a puppet
-resource so you can easily make sure that a certain database exists.
+resource, so you can easily make sure that a certain database exists.
 
 Let's say you write your own `puppetdb::database` class and inside that
 class you want to make sure that a database called `puppetdb` exists:
