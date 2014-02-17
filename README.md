@@ -27,6 +27,16 @@ New functions
 New custom types
 ----------------
 
+### Requirements
+
+To be able to use the following types the `postgres` user has to
+be able to access the database without password. This means you'll
+probably want to have the following line in your `pg_hba.conf`
+
+    # TYPE    DATABASE    USER        ADDRESS    METHOD
+    local     all         postgres               ident
+    ...
+
 ### pg\_database
 
 The `pg_database` lets you describe a PostgreSQL database as a puppet
