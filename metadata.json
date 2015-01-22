@@ -1,0 +1,18 @@
+{
+  "name": "stschulte-postgres",
+  "version": "1.0.0",
+  "author": "stschulte",
+  "summary": "Manage postgres roles and databases through puppet",
+  "license": "Apache-2.0",
+  "source": "https://github.com/stschulte/puppet-postgres.git",
+  "project_page": "https://github.com/stschulte/puppet-postgres",
+  "issues_url": "https://github.com/stschulte/puppet-postgres/issues",
+  "dependencies": [ ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [ "6.0" ]
+    }
+  ],
+  "tags": ["postgres", "PostgreSQL"]
+}
