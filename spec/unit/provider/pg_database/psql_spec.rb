@@ -25,35 +25,35 @@ describe Puppet::Type.type(:pg_database).provider(:psql) do
     it "should return instances from simple list output" do
       described_class.expects(:execute).with(%w{/foo/psql --no-password --no-align --tuples-only --list}, :failonfail => true, :combine => true, :uid => 'postgres').returns File.read(my_fixture('simple'))
       instances = described_class.instances
-      instances.size.should == 1
-      instances[0].name.should == 'postgres'
-      instances[0].owner.should == 'postgres'
-      instances[0].encoding.should == 'UTF8'
-      instances[0].collate.should == 'de_DE.utf8'
-      instances[0].ctype.should == 'de_DE.utf8'
+      expect(instances.size).to eq 1
+      expect(instances[0].name).to eq('postgres')
+      expect(instances[0].owner).to eq('postgres')
+      expect(instances[0].encoding).to eq('UTF8')
+      expect(instances[0].collate).to eq('de_DE.utf8')
+      expect(instances[0].ctype).to eq('de_DE.utf8')
     end
 
     it "should return instances from list output with newlines" do
       described_class.expects(:execute).with(%w{/foo/psql --no-password --no-align --tuples-only --list}, :failonfail => true, :combine => true, :uid => 'postgres').returns File.read(my_fixture('newline'))
       instances = described_class.instances
-      instances.size.should == 3
-      instances[0].name.should == 'postgres'
-      instances[0].owner.should == 'postgres'
-      instances[0].encoding.should == 'UTF8'
-      instances[0].collate.should == 'de_DE.utf8'
-      instances[0].ctype.should == 'de_DE.utf8'
+      expect(instances.size).to eq(3)
+      expect(instances[0].name).to eq('postgres')
+      expect(instances[0].owner).to eq('postgres')
+      expect(instances[0].encoding).to eq('UTF8')
+      expect(instances[0].collate).to eq('de_DE.utf8')
+      expect(instances[0].ctype).to eq('de_DE.utf8')
 
-      instances[1].name.should == 'template0'
-      instances[1].owner.should == 'postgres'
-      instances[1].encoding.should == 'UTF8'
-      instances[1].collate.should == 'en_US.utf8'
-      instances[1].ctype.should == 'C'
+      expect(instances[1].name).to eq('template0')
+      expect(instances[1].owner).to eq('postgres')
+      expect(instances[1].encoding).to eq('UTF8')
+      expect(instances[1].collate).to eq('en_US.utf8')
+      expect(instances[1].ctype).to eq('C')
 
-      instances[2].name.should == 'template1'
-      instances[2].owner.should == 'postgres'
-      instances[2].encoding.should == 'UTF8'
-      instances[2].collate.should == 'de_DE.utf8'
-      instances[2].ctype.should == 'de_DE.utf8'
+      expect(instances[2].name).to eq('template1')
+      expect(instances[2].owner).to eq('postgres')
+      expect(instances[2].encoding).to eq('UTF8')
+      expect(instances[2].collate).to eq('de_DE.utf8')
+      expect(instances[2].ctype).to eq('de_DE.utf8')
     end
   end
 
@@ -61,12 +61,12 @@ describe Puppet::Type.type(:pg_database).provider(:psql) do
     describe "exists?" do
       it "should return true when the resource is present" do
         provider.set(:ensure => :present)
-        provider.should be_exists
+        expect(provider).to be_exists
       end
 
       it "should return false when the resource is absent" do
         provider.set(:ensure => :absent)
-        provider.should_not be_exists
+        expect(provider).to_not be_exists
       end
     end
 
@@ -132,7 +132,7 @@ describe Puppet::Type.type(:pg_database).provider(:psql) do
   }.each_pair do |property, should_value|
     describe "when managing #{property}" do
       it "should return the cached value" do
-        provider.send(property).should == should_value
+        expect(provider.send(property)).to eq(should_value)
       end
 
       it "should raise an error when changing #{property}" do

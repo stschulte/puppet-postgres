@@ -33,25 +33,25 @@ describe Puppet::Type.type(:pg_role).provider(:psql) do
 
       described_class.expects(:execute).with(cmdline, :failonfail => true, :combine => true, :uid => 'postgres').returns File.read(my_fixture('userlist'))
       instances = described_class.instances
-      instances.size.should == 2
+      expect(instances.size).to eq(2)
 
-      instances[0].should be_exists
-      instances[0].name.should == 'postgres'
-      instances[0].password.should == :absent
-      instances[0].superuser.should == :true
-      instances[0].createdb.should == :true
-      instances[0].createrole.should == :true
-      instances[0].inherit.should == :true
-      instances[0].login.should == :true
+      expect(instances[0]).to be_exists
+      expect(instances[0].name).to eq('postgres')
+      expect(instances[0].password).to eq(:absent)
+      expect(instances[0].superuser).to eq(:true)
+      expect(instances[0].createdb).to eq(:true)
+      expect(instances[0].createrole).to eq(:true)
+      expect(instances[0].inherit).to eq(:true)
+      expect(instances[0].login).to eq(:true)
 
-      instances[1].should be_exists
-      instances[1].name.should == 'foobar'
-      instances[1].password.should == 'md559faa421729e846dd800dce59943bfc0'
-      instances[1].superuser.should == :false
-      instances[1].createdb.should == :false
-      instances[1].createrole.should == :false
-      instances[1].inherit.should == :true
-      instances[1].login.should == :true
+      expect(instances[1]).to be_exists
+      expect(instances[1].name).to eq('foobar')
+      expect(instances[1].password).to eq('md559faa421729e846dd800dce59943bfc0')
+      expect(instances[1].superuser).to eq(:false)
+      expect(instances[1].createdb).to eq(:false)
+      expect(instances[1].createrole).to eq(:false)
+      expect(instances[1].inherit).to eq(:true)
+      expect(instances[1].login).to eq(:true)
     end
   end
 
@@ -59,12 +59,12 @@ describe Puppet::Type.type(:pg_role).provider(:psql) do
     describe "exists?" do
       it "should return true when the resource is present" do
         provider.set(:ensure => :present)
-        provider.should be_exists
+        expect(provider).to be_exists
       end
 
       it "should return false when the resource is absent" do
         provider.set(:ensure => :absent)
-        provider.should_not be_exists
+        expect(provider).to_not be_exists
       end
     end
 
@@ -199,7 +199,7 @@ describe Puppet::Type.type(:pg_role).provider(:psql) do
   describe "when managing password" do
     it "should get the cached value when retrieving the current value" do
       provider.set(:password => 'md559faa421729e846dd800dce59943bfc0')
-      provider.password.should == 'md559faa421729e846dd800dce59943bfc0'
+      expect(provider.password).to eq('md559faa421729e846dd800dce59943bfc0')
     end
 
     it "should alter the role when setting a new password" do
@@ -227,9 +227,9 @@ describe Puppet::Type.type(:pg_role).provider(:psql) do
     describe "when managing #{bool_property}" do
       it "should get the cached value when retrieving the current value" do
         provider.set(bool_property => :true)
-        provider.send(bool_property).should == :true
+        expect(provider.send(bool_property)).to eq(:true)
         provider.set(bool_property => :false)
-        provider.send(bool_property).should == :false
+        expect(provider.send(bool_property)).to eq(:false)
       end
 
       it "should pass #{sql_value} if the desired value is true" do

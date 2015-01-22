@@ -5,19 +5,19 @@ require 'spec_helper'
 describe Puppet::Type.type(:pg_database) do
 
   it "should have name as its keyattribute" do
-    described_class.key_attributes.should == [ :name ]
+    expect(described_class.key_attributes).to eq([ :name ])
   end
 
   describe "when validating attributes" do
     [:name, :provider].each do |param|
       it "should have a #{param} parameter" do
-        described_class.attrtype(param).should == :param
+        expect(described_class.attrtype(param)).to eq(:param)
       end
     end
 
     [:ensure, :owner, :encoding, :collate, :ctype].each do |property|
       it "should have a #{property} property" do
-        described_class.attrtype(property).should == :property
+        expect(described_class.attrtype(property)).to eq(:property)
       end
     end
   end
@@ -25,11 +25,11 @@ describe Puppet::Type.type(:pg_database) do
   describe "when validating values" do
     describe "for ensure" do
       it "should allow present" do
-        described_class.new(:name => 'foo', :ensure => 'present')[:ensure].should == :present
+        expect(described_class.new(:name => 'foo', :ensure => 'present')[:ensure]).to eq(:present)
       end
 
       it "should allow absent" do
-        described_class.new(:name => 'foo', :ensure => 'absent')[:ensure].should == :absent
+        expect(described_class.new(:name => 'foo', :ensure => 'absent')[:ensure]).to eq(:absent)
       end
 
       it "should not allow something else" do
@@ -39,21 +39,21 @@ describe Puppet::Type.type(:pg_database) do
 
     describe "for owner" do
       it "should allow a simple owner name" do
-        described_class.new(:name => 'foo', :owner => 'puppetdb')[:owner].should == 'puppetdb'
+        expect(described_class.new(:name => 'foo', :owner => 'puppetdb')[:owner]).to eq('puppetdb')
       end
     end
 
     describe "for encoding" do
       it "should allow LATIN1" do
-        described_class.new(:name => 'foo', :encoding => 'LATIN1')[:encoding].should == :LATIN1
+        expect(described_class.new(:name => 'foo', :encoding => 'LATIN1')[:encoding]).to eq(:LATIN1)
       end
 
       it "should allow LATIN9" do
-        described_class.new(:name => 'foo', :encoding => 'LATIN9')[:encoding].should == :LATIN9
+        expect(described_class.new(:name => 'foo', :encoding => 'LATIN9')[:encoding]).to eq(:LATIN9)
       end
 
       it "should allow UTF8" do
-        described_class.new(:name => 'foo', :encoding => 'UTF8')[:encoding].should == :UTF8
+        expect(described_class.new(:name => 'foo', :encoding => 'UTF8')[:encoding]).to eq(:UTF8)
       end
 
       it "should not allow anything else" do
@@ -63,21 +63,21 @@ describe Puppet::Type.type(:pg_database) do
 
     describe "for collate" do
       it "should allow a C locale" do
-        described_class.new(:name => 'foo', :collate => 'C')[:collate].should == 'C'
+        expect(described_class.new(:name => 'foo', :collate => 'C')[:collate]).to eq('C')
       end
 
       it "should allow a valid locale" do
-        described_class.new(:name => 'foo', :collate => 'en_US.utf8')[:collate].should == 'en_US.utf8'
+        expect(described_class.new(:name => 'foo', :collate => 'en_US.utf8')[:collate]).to eq('en_US.utf8')
       end
     end
 
     describe "for ctype" do
       it "should allow a C locale" do
-        described_class.new(:name => 'foo', :ctype => 'C')[:ctype].should == 'C'
+        expect(described_class.new(:name => 'foo', :ctype => 'C')[:ctype]).to eq('C')
       end
 
       it "should allow a valid locale" do
-        described_class.new(:name => 'foo', :ctype => 'en_US.utf8')[:ctype].should == 'en_US.utf8'
+        expect(described_class.new(:name => 'foo', :ctype => 'en_US.utf8')[:ctype]).to eq('en_US.utf8')
       end
     end
   end
@@ -99,7 +99,7 @@ describe Puppet::Type.type(:pg_database) do
     describe "pg_role" do
       it "should not autorequire a pg_role if none found" do
         catalog.add_resource pg_database
-        pg_database.autorequire.should be_empty
+        expect(pg_database.autorequire).to be_empty
       end
 
       it "should autorequire a matching pg_role" do
@@ -107,9 +107,9 @@ describe Puppet::Type.type(:pg_database) do
         catalog.add_resource pg_role
 
         reqs = pg_database.autorequire
-        reqs.size.should == 1
-        reqs[0].source.must == pg_role
-        reqs[0].target.must == pg_database
+        expect(reqs.size).to eq(1)
+        expect(reqs[0].source).to eq(pg_role)
+        expect(reqs[0].target).to eq(pg_database)
       end
     end
   end
